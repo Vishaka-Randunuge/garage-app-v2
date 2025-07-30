@@ -1,138 +1,153 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\RepairJob;
+use App\Models\RepairJobItem;
 use App\Models\Vehicle;
 use App\Models\Inventory;
 
 class RepairJobController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
-{
-    // eager load vehicle and inventory to avoid N+1 query problem
-    $repairJobs = RepairJob::with(['vehicle', 'inventory'])->latest()->paginate(15);
-
-    return view('repair-jobs.index', compact('repairJobs'));
-}
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-{
-    $vehicles = Vehicle::all();
-    $inventories = Inventory::all();
-
-    return view('repair-jobs.create', compact('vehicles', 'inventories'));
-}
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
     {
-        $request->validate([
-            'vehicle_id' => 'required|exists:vehicles,id',
-            'inventory_id' => 'nullable|exists:inventories,id',
-            'repair_type_manual' => 'nullable|string|max:255',
-            'rate' => 'nullable|numeric',
-            'amount' => 'nullable|integer',
-            'total' => 'nullable|numeric',
-            'status' => 'required|in:ongoing,printed',
-
-        ]);
-    
-        // Calculate total if not provided
-        $total = $request->total;
-        if (!$total && $request->rate && $request->amount) {
-            $total = $request->rate * $request->amount;
-        }
-    
-        RepairJob::create([
-            'vehicle_id' => $request->vehicle_id,
-            'inventory_id' => $request->inventory_id,
-            'repair_type_manual' => $request->repair_type_manual,
-            'rate' => $request->rate,
-            'amount' => $request->amount,
-            'total' => $total,
-            'status' => $request->status,
-        ]);
-    
-        return redirect()->route('repair-jobs.index')->with('success', 'Repair job added successfully.');
+        $repairJobs = RepairJob::with(['vehicle', 'items.inventory'])->latest()->paginate(15);
+        return view('repair-jobs.index', compact('repairJobs'));
     }
-    
 
-    /**
-     * Display the specified resource.
-     */
+    public function create()
+    {
+        $vehicles = Vehicle::all();
+        $inventories = Inventory::all();
+        return view('repair-jobs.create', compact('vehicles', 'inventories'));
+    }
+
+    public function store(Request $request)
+{
+    $request->validate([
+        'vehicle_id' => 'required|exists:vehicles,id',
+        'status' => 'required|in:ongoing,printed',
+
+        'inventory_items.*.inventory_id' => 'required|exists:inventories,id',
+        'inventory_items.*.rate' => 'nullable|numeric',
+        'inventory_items.*.amount' => 'nullable|integer',
+        'inventory_items.*.total' => 'nullable|numeric',
+
+        'manual_items.*.manual_type' => 'required|string|max:255',
+        'manual_items.*.rate' => 'nullable|numeric',
+        'manual_items.*.amount' => 'nullable|integer',
+        'manual_items.*.total' => 'nullable|numeric',
+    ]);
+
+    $repairJob = RepairJob::create([
+        'vehicle_id' => $request->vehicle_id,
+        'status' => $request->status,
+    ]);
+
+    // Save inventory-based items
+    foreach ($request->input('inventory_items', []) as $item) {
+        RepairJobItem::create([
+            'repair_job_id' => $repairJob->id,
+            'inventory_id' => $item['inventory_id'],
+            'rate' => $item['rate'] ?? 0,
+            'amount' => $item['amount'] ?? 0,
+            'total' => $item['total'] ?? ($item['rate'] ?? 0) * ($item['amount'] ?? 0),
+        ]);
+    }
+
+    // Save manual items
+    foreach ($request->input('manual_items', []) as $item) {
+        RepairJobItem::create([
+            'repair_job_id' => $repairJob->id,
+            'manual_type' => $item['manual_type'],
+            'rate' => $item['rate'] ?? 0,
+            'amount' => $item['amount'] ?? 0,
+            'total' => $item['total'] ?? ($item['rate'] ?? 0) * ($item['amount'] ?? 0),
+        ]);
+    }
+
+    return redirect()->route('repair-jobs.index')->with('success', 'Repair job created successfully.');
+}
+
+
     public function show($id)
-{
-    $repairJob = RepairJob::with(['vehicle', 'inventory'])->findOrFail($id);
+    {
+        $repairJob = RepairJob::with(['vehicle', 'items.inventory'])->findOrFail($id);
+        return view('repair-jobs.show', compact('repairJob'));
+    }
 
-    return view('repair-jobs.show', compact('repairJob'));
-}
-
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($id)
-{
-    $repairJob = RepairJob::findOrFail($id);
-    $vehicles = Vehicle::all();
-    $inventories = Inventory::all();
+    {
+        $repairJob = RepairJob::with('items')->findOrFail($id);
+        $vehicles = Vehicle::all();
+        $inventories = Inventory::all();
 
-    return view('repair-jobs.edit', compact('repairJob', 'vehicles', 'inventories'));
-}
+        return view('repair-jobs.edit', compact('repairJob', 'vehicles', 'inventories'));
+    }
 
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
 {
     $request->validate([
         'vehicle_id' => 'required|exists:vehicles,id',
-        'inventory_id' => 'nullable|exists:inventories,id',
-        'repair_type_manual' => 'nullable|string|max:255',
-        'rate' => 'nullable|numeric',
-        'amount' => 'nullable|integer',
-        'total' => 'nullable|numeric',
         'status' => 'required|in:ongoing,printed',
+
+        'inventory_items.*.inventory_id' => 'required|exists:inventories,id',
+        'inventory_items.*.rate' => 'nullable|numeric',
+        'inventory_items.*.amount' => 'nullable|integer',
+        'inventory_items.*.total' => 'nullable|numeric',
+
+        'manual_items.*.manual_type' => 'required|string|max:255',
+        'manual_items.*.rate' => 'nullable|numeric',
+        'manual_items.*.amount' => 'nullable|integer',
+        'manual_items.*.total' => 'nullable|numeric',
     ]);
 
     $repairJob = RepairJob::findOrFail($id);
-
-    // Calculate total if not provided
-    $total = $request->total;
-    if (!$total && $request->rate && $request->amount) {
-        $total = $request->rate * $request->amount;
-    }
-
     $repairJob->update([
         'vehicle_id' => $request->vehicle_id,
-        'inventory_id' => $request->inventory_id,
-        'repair_type_manual' => $request->repair_type_manual,
-        'rate' => $request->rate,
-        'amount' => $request->amount,
-        'total' => $total,
         'status' => $request->status,
     ]);
+
+    $repairJob->items()->delete(); // Clear old items
+
+    // Save new inventory items
+    foreach ($request->input('inventory_items', []) as $item) {
+        RepairJobItem::create([
+            'repair_job_id' => $repairJob->id,
+            'inventory_id' => $item['inventory_id'],
+            'rate' => $item['rate'] ?? 0,
+            'amount' => $item['amount'] ?? 0,
+            'total' => $item['total'] ?? ($item['rate'] ?? 0) * ($item['amount'] ?? 0),
+        ]);
+    }
+
+    // Save new manual items
+    foreach ($request->input('manual_items', []) as $item) {
+        RepairJobItem::create([
+            'repair_job_id' => $repairJob->id,
+            'manual_type' => $item['manual_type'],
+            'rate' => $item['rate'] ?? 0,
+            'amount' => $item['amount'] ?? 0,
+            'total' => $item['total'] ?? ($item['rate'] ?? 0) * ($item['amount'] ?? 0),
+        ]);
+    }
 
     return redirect()->route('repair-jobs.index')->with('success', 'Repair job updated successfully.');
 }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+public function print($id)
+{
+    $repairJob = RepairJob::with(['vehicle', 'items.inventory'])->findOrFail($id);
+    return view('repair-jobs.print', compact('repairJob'));
+}
+
+
+    public function destroy($id)
     {
-        //
+        $repairJob = RepairJob::findOrFail($id);
+        $repairJob->items()->delete();
+        $repairJob->delete();
+
+        return redirect()->route('repair-jobs.index')->with('success', 'Repair job deleted.');
     }
 }

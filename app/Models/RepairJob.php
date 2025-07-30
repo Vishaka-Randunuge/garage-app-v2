@@ -33,5 +33,11 @@ class RepairJob extends Model
     {
         return $this->hasOne(PrintedJob::class);
     }
+
+    public function items()
+{
+    return $this->hasMany(RepairJobItem::class);
+}
+
 }
 

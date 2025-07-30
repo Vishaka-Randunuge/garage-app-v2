@@ -29,24 +29,55 @@
                     <tr class="text-center border-b">
                         <td class="py-2 px-4 border">{{ $job->vehicle->registration_no }}</td>
                         <td class="py-2 px-4 border">{{ $job->vehicle->owner_name }}</td>
-                        <td class="py-2 px-4 border">
-                            {{ $job->inventory ? $job->inventory->part_name : $job->repair_type_manual }}
+            
+                        {{-- Show multiple repair items --}}
+                        <td class="py-2 px-4 border text-left">
+                            <ul class="list-disc pl-4">
+                                @foreach($job->items as $item)
+                                    <li>
+                                        {{ $item->inventory ? $item->inventory->part_name : $item->manual_type }}
+                                    </li>
+                                @endforeach
+                            </ul>
                         </td>
-                        <td class="py-2 px-4 border">{{ $job->rate ?? '-' }}</td>
-                        <td class="py-2 px-4 border">{{ $job->amount ?? '-' }}</td>
-                        <td class="py-2 px-4 border">{{ $job->total ?? '-' }}</td>
-                        <td class="py-2 px-4 border capitalize">{{ $job->status }}</td>
-                        <td class="py-2 px-4 border space-x-2">
-                            <a href="{{ route('repair-jobs.edit', $job->id) }}" class="text-blue-600 hover:underline">Edit</a>
-                            <form action="{{ route('repair-jobs.destroy', $job->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Delete this repair job?');">
+            
+                        {{-- Optional: You can average/sum rate/amount here, or leave it per item in show view --}}
+                        <td class="py-2 px-4 border">
+                            @foreach($job->items as $item)
+                                <div>{{ $item->rate ?? '-' }}</div>
+                            @endforeach
+                        </td>
+            
+                        <td class="py-2 px-4 border">
+                            @foreach($job->items as $item)
+                                <div>{{ $item->amount ?? '-' }}</div>
+                            @endforeach
+                        </td>
+            
+                        <td class="py-2 px-4 border font-semibold">
+                            {{ $job->items->sum('total') ?? '-' }}
+                        </td>
+            
+                        <td class="py-2 px-4 border capitalize">
+                            {{ $job->status }}
+                        </td>
+            
+                        <td class="py-2 px-4 border space-y-2">
+                            <a href="{{ route('repair-jobs.show', $job->id) }}" class="text-green-600 hover:underline block">View</a>
+                        
+                            <a href="{{ route('repair-jobs.edit', $job->id) }}" class="text-blue-600 hover:underline block">Edit</a>
+                        
+                            <form action="{{ route('repair-jobs.destroy', $job->id) }}" method="POST" onsubmit="return confirm('Delete this repair job?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:underline">Delete</button>
                             </form>
                         </td>
+                        
                     </tr>
                 @endforeach
             </tbody>
+            
         </table>
 
         <div class="mt-4">

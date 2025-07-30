@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('repair-jobs', RepairJobController::class);
     Route::resource('printed-jobs', PrintedJobController::class);
     
+    Route::get('/repair-jobs/{id}/print', [RepairJobController::class, 'print'])->name('repair-jobs.print');
 
 });
 

@@ -3,49 +3,65 @@
     <div class="container mx-auto max-w-3xl p-4">
         <h1 class="text-2xl font-bold mb-6">Add New Repair Job</h1>
 
-        <form action="{{ route('repair-jobs.store') }}" method="POST" class="bg-white p-6 rounded shadow">
+        <form action="{{ route('repair-jobs.store') }}" method="POST" class="bg-white p-6 rounded shadow" x-data="repairJobForm()">
             @csrf
 
             <div class="mb-4">
                 <label for="vehicle_id" class="block text-gray-700 font-bold mb-2">Vehicle</label>
-                <select name="vehicle_id" id="vehicle_id" class="w-full border-gray-300 rounded">
+                <select name="vehicle_id" id="vehicle_id" class="w-full border-gray-300 rounded" required>
+                    <option value="">-- Select Vehicle --</option>
                     @foreach($vehicles as $vehicle)
                         <option value="{{ $vehicle->id }}">{{ $vehicle->registration_no }} - {{ $vehicle->owner_name }}</option>
                     @endforeach
                 </select>
             </div>
 
+            {{-- Inventory Repair Types --}}
+            <div class="mb-6">
+                <label class="block text-gray-700 font-bold mb-2">Repair Types from Inventory</label>
+                <template x-for="(item, index) in inventoryItems" :key="index">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <select :name="'inventory_items[' + index + '][inventory_id]'" class="flex-1 border-gray-300 rounded" x-model="item.inventory_id">
+                            <option value="">-- Select Part --</option>
+                            @foreach($inventories as $inventory)
+                                <option value="{{ $inventory->id }}">{{ $inventory->part_name }}</option>
+                            @endforeach
+                        </select>
+
+                        <input type="number" step="0.01" :name="'inventory_items[' + index + '][rate]'" placeholder="Rate" class="w-20 border-gray-300 rounded" x-model="item.rate">
+                        <input type="number" :name="'inventory_items[' + index + '][amount]'" placeholder="Amount" class="w-20 border-gray-300 rounded" x-model="item.amount">
+                        <input type="number" step="0.01" :name="'inventory_items[' + index + '][total]'" placeholder="Total" class="w-24 border-gray-300 rounded" x-model="item.total" readonly>
+
+                        <button type="button" @click="removeInventoryItem(index)" class="text-red-600 font-bold text-xl leading-none">×</button>
+                    </div>
+                </template>
+
+                <button type="button" @click="addInventoryItem()" class="text-red-600 font-semibold">+ Add Inventory Repair Type</button>
+            </div>
+
+            {{-- Manual Repair Types --}}
+            <div class="mb-6">
+                <label class="block text-gray-700 font-bold mb-2">Manual Repair Types</label>
+                <template x-for="(item, index) in manualItems" :key="index">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <input type="text" :name="'manual_items[' + index + '][manual_type]'" placeholder="Repair Type" class="flex-1 border-gray-300 rounded" x-model="item.manual_type" />
+                        <input type="number" step="0.01" :name="'manual_items[' + index + '][rate]'" placeholder="Rate" class="w-20 border-gray-300 rounded" x-model="item.rate">
+                        <input type="number" :name="'manual_items[' + index + '][amount]'" placeholder="Amount" class="w-20 border-gray-300 rounded" x-model="item.amount">
+                        <input type="number" step="0.01" :name="'manual_items[' + index + '][total]'" placeholder="Total" class="w-24 border-gray-300 rounded" x-model="item.total" readonly>
+
+                        <button type="button" @click="removeManualItem(index)" class="text-red-600 font-bold text-xl leading-none">×</button>
+                    </div>
+                </template>
+
+                <button type="button" @click="addManualItem()" class="text-red-600 font-semibold">+ Add Manual Repair Type</button>
+            </div>
+
             <div class="mb-4">
-                <label for="inventory_id" class="block text-gray-700 font-bold mb-2">Repair Inventory (Optional)</label>
-                <select name="inventory_id" id="inventory_id" class="w-full border-gray-300 rounded">
-                    <option value="">-- Manual Entry --</option>
-                    @foreach($inventories as $inventory)
-                        <option value="{{ $inventory->id }}">{{ $inventory->part_name }}</option>
-                    @endforeach
+                <label for="status" class="block text-gray-700 font-bold mb-2">Status</label>
+                <select name="status" id="status" required class="w-full border-gray-300 rounded">
+                    <option value="ongoing" selected>Ongoing</option>
+                    <option value="printed">Printed</option>
                 </select>
-            </div>
-
-            <div class="mb-4">
-                <label for="repair_type_manual" class="block text-gray-700 font-bold mb-2">Repair Type (Manual)</label>
-                <input type="text" name="repair_type_manual" id="repair_type_manual" class="w-full border-gray-300 rounded" placeholder="If not selected from inventory">
-            </div>
-
-            <div class="mb-4">
-                <label for="rate" class="block text-gray-700 font-bold mb-2">Rate</label>
-                <input type="number" step="0.01" name="rate" id="rate" class="w-full border-gray-300 rounded">
-            </div>
-
-            <div class="mb-4">
-                <label for="amount" class="block text-gray-700 font-bold mb-2">Amount</label>
-                <input type="number" name="amount" id="amount" class="w-full border-gray-300 rounded">
-            </div>
-
-            <div class="mb-4">
-                <select name="status" id="status" required class="w-full border rounded p-2">
-                    <option value="ongoing" {{ old('status') == 'ongoing' ? 'selected' : '' }}>Ongoing</option>
-                    <option value="printed" {{ old('status') == 'printed' ? 'selected' : '' }}>Printed</option>
-                </select>
-                
             </div>
 
             <div class="flex justify-end">
@@ -53,4 +69,31 @@
             </div>
         </form>
     </div>
+
+    <script>
+        function repairJobForm() {
+            return {
+                inventoryItems: [
+                    { inventory_id: '', rate: '', amount: '', total: '' },
+                ],
+                manualItems: [
+                    { manual_type: '', rate: '', amount: '', total: '' },
+                ],
+
+                addInventoryItem() {
+                    this.inventoryItems.push({ inventory_id: '', rate: '', amount: '', total: '' });
+                },
+                removeInventoryItem(index) {
+                    this.inventoryItems.splice(index, 1);
+                },
+
+                addManualItem() {
+                    this.manualItems.push({ manual_type: '', rate: '', amount: '', total: '' });
+                },
+                removeManualItem(index) {
+                    this.manualItems.splice(index, 1);
+                },
+            }
+        }
+    </script>
 </x-app-layout>
