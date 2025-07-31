@@ -6,15 +6,37 @@
         <form action="{{ route('repair-jobs.store') }}" method="POST" class="bg-white p-6 rounded shadow" x-data="repairJobForm()">
             @csrf
 
-            <div class="mb-4">
-                <label for="vehicle_id" class="block text-gray-700 font-bold mb-2">Vehicle</label>
-                <select name="vehicle_id" id="vehicle_id" class="w-full border-gray-300 rounded" required>
-                    <option value="">-- Select Vehicle --</option>
-                    @foreach($vehicles as $vehicle)
-                        <option value="{{ $vehicle->id }}">{{ $vehicle->registration_no }} - {{ $vehicle->owner_name }}</option>
-                    @endforeach
-                </select>
+            <div x-data="{ newVehicle: false, vehicles: {{ $vehicles->toJson() }}, selectedVehicleId: '', ownerName: '' }" class="mb-6">
+                <label class="block text-gray-700 font-bold mb-2">Vehicle</label>
+            
+                <div class="mb-2">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" x-model="newVehicle" class="form-checkbox">
+                        <span class="ml-2 text-sm text-gray-700">Add new vehicle</span>
+                    </label>
+                </div>
+            
+                <template x-if="!newVehicle">
+                    <select name="vehicle_id" x-model="selectedVehicleId" @change="ownerName = (vehicles.find(v => v.id == selectedVehicleId)?.owner_name || '')" class="w-full border-gray-300 rounded">
+                        <option value="">-- Select Vehicle --</option>
+                        <template x-for="vehicle in vehicles" :key="vehicle.id">
+                            <option :value="vehicle.id" x-text="vehicle.registration_no + ' - ' + vehicle.owner_name"></option>
+                        </template>
+                    </select>
+                </template>
+            
+                <template x-if="newVehicle">
+                    <div class="space-y-2 mt-2">
+                        <input type="text" name="registration_no" placeholder="Vehicle Reg. No" class="w-full border-gray-300 rounded">
+                        <input type="text" name="owner_name" placeholder="Owner Name" class="w-full border-gray-300 rounded" x-model="ownerName">
+                    </div>
+                </template>
+            
+                <template x-if="!newVehicle && ownerName">
+                    <p class="mt-2 text-sm text-gray-600">Owner: <strong x-text="ownerName"></strong></p>
+                </template>
             </div>
+            
 
             {{-- Inventory Repair Types --}}
             <div class="mb-6">

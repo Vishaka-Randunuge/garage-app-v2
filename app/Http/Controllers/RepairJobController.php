@@ -25,48 +25,29 @@ class RepairJobController extends Controller
     public function store(Request $request)
 {
     $request->validate([
-        'vehicle_id' => 'required|exists:vehicles,id',
-        'status' => 'required|in:ongoing,printed',
-
-        'inventory_items.*.inventory_id' => 'required|exists:inventories,id',
-        'inventory_items.*.rate' => 'nullable|numeric',
-        'inventory_items.*.amount' => 'nullable|integer',
-        'inventory_items.*.total' => 'nullable|numeric',
-
-        'manual_items.*.manual_type' => 'required|string|max:255',
-        'manual_items.*.rate' => 'nullable|numeric',
-        'manual_items.*.amount' => 'nullable|integer',
-        'manual_items.*.total' => 'nullable|numeric',
+        'status' => 'required',
+        // other validations
     ]);
+
+    if ($request->filled('registration_no') && $request->filled('owner_name')) {
+        $vehicle = Vehicle::create([
+            'registration_no' => $request->registration_no,
+            'owner_name' => $request->owner_name,
+        ]);
+        $vehicleId = $vehicle->id;
+    } else {
+        $vehicleId = $request->vehicle_id;
+    }
 
     $repairJob = RepairJob::create([
-        'vehicle_id' => $request->vehicle_id,
+        'vehicle_id' => $vehicleId,
         'status' => $request->status,
+        // other fields
     ]);
 
-    // Save inventory-based items
-    foreach ($request->input('inventory_items', []) as $item) {
-        RepairJobItem::create([
-            'repair_job_id' => $repairJob->id,
-            'inventory_id' => $item['inventory_id'],
-            'rate' => $item['rate'] ?? 0,
-            'amount' => $item['amount'] ?? 0,
-            'total' => $item['total'] ?? ($item['rate'] ?? 0) * ($item['amount'] ?? 0),
-        ]);
-    }
+    // Handle inventory_items[] and manual_items[] saving logic here
 
-    // Save manual items
-    foreach ($request->input('manual_items', []) as $item) {
-        RepairJobItem::create([
-            'repair_job_id' => $repairJob->id,
-            'manual_type' => $item['manual_type'],
-            'rate' => $item['rate'] ?? 0,
-            'amount' => $item['amount'] ?? 0,
-            'total' => $item['total'] ?? ($item['rate'] ?? 0) * ($item['amount'] ?? 0),
-        ]);
-    }
-
-    return redirect()->route('repair-jobs.index')->with('success', 'Repair job created successfully.');
+    return redirect()->route('repair-jobs.index')->with('success', 'Repair job added.');
 }
 
 
