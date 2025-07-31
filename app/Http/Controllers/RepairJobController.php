@@ -141,6 +141,34 @@ public function print($id)
     return view('repair-jobs.print', compact('repairJob'));
 }
 
+public function printedInvoices(Request $request)
+{
+    $query = RepairJob::with('vehicle')
+                ->where('status', 'printed');
+
+    if ($search = $request->input('search')) {
+        $query->whereHas('vehicle', function ($q) use ($search) {
+            $q->where('registration_no', 'like', "%{$search}%")
+              ->orWhere('owner_name', 'like', "%{$search}%");
+        });
+    }
+
+    $printedJobs = $query->latest()->get();
+
+    return view('repair-jobs.printed', compact('printedJobs'));
+}
+
+
+
+public function markAsPrinted($id)
+{
+    $repairJob = RepairJob::findOrFail($id);
+    $repairJob->status = 'printed';
+    $repairJob->save();
+
+    return response()->json(['message' => 'Repair job marked as printed']);
+}
+
 
     public function destroy($id)
     {

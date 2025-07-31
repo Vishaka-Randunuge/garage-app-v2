@@ -13,6 +13,27 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <!-- Print-specific CSS -->
+<style>
+    @media print {
+        /* Hide navigation, header, and anything else unnecessary */
+        .no-print,
+        nav, /* Laravel Jetstream's nav */
+        header,
+        .bg-white.shadow {
+            display: none !important;
+        }
+    
+        /* Make the main content full width */
+        main {
+            width: 100% !important;
+            margin: 0 !important;
+        }
+    }
+    </style>
+
+
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
@@ -33,4 +54,5 @@
             </main>
         </div>
     </body>
+    
 </html>
