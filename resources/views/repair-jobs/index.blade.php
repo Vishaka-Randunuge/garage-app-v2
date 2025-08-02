@@ -1,6 +1,7 @@
 {{-- resources/views/repair-jobs/index.blade.php --}}
 <x-app-layout>
-    <div class="container mx-auto max-w-5xl p-4">
+    <div class="py-12">
+    <div class="container max-w-7xl mx-auto sm:px-6 lg:px-8">
         <h1 class="text-2xl font-bold mb-6">Repair Jobs</h1>
 
         <a href="{{ route('repair-jobs.create') }}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mb-4 inline-block">Add New Repair Job</a>
@@ -84,5 +85,6 @@
         <div class="mt-4">
             {{ $repairJobs->links() }}
         </div>
+    </div>
     </div>
 </x-app-layout>

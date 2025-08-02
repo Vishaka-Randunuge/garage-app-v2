@@ -18,6 +18,13 @@
                 </div>
             </div>
 
+            <!-- Center: Site title -->
+            <div class="hidden sm:flex items-center justify-center flex-1">
+                <span class="text-2xl font-extrabold text-red-600 tracking-wide">
+                    <span class="text-black">P.M.</span>Motors
+                </span>
+            </div>
+
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
