@@ -12,25 +12,45 @@ class DashboardController extends Controller
     public function index()
     {
         $now = Carbon::now();
-    
-        // Jobs
+
+        // Jobs counts
         $weeklyJobs = RepairJob::whereBetween('created_at', [$now->copy()->startOfWeek(), $now->copy()->endOfWeek()])->count();
         $monthlyJobs = RepairJob::whereMonth('created_at', $now->month)->whereYear('created_at', $now->year)->count();
         $yearlyJobs = RepairJob::whereYear('created_at', $now->year)->count();
         $dailyJobs = RepairJob::whereDate('created_at', $now->toDateString())->count();
-    
-        // Revenue
-        $dailyRevenue = RepairJob::whereDate('created_at', $now->toDateString())->sum('total');
-        $weeklyRevenue = RepairJob::whereBetween('created_at', [$now->copy()->startOfWeek(), $now->copy()->endOfWeek()])->sum('total');
-        $monthlyRevenue = RepairJob::whereMonth('created_at', $now->month)->whereYear('created_at', $now->year)->sum('total');
-        $yearlyRevenue = RepairJob::whereYear('created_at', $now->year)->sum('total');
-    
-        // New Vehicles
+
+        // Revenue sums by summing related repair job items' totals
+        $dailyRevenue = RepairJob::with('items')
+            ->whereDate('created_at', $now->toDateString())
+            ->get()
+            ->flatMap->items
+            ->sum('total');
+
+        $weeklyRevenue = RepairJob::with('items')
+            ->whereBetween('created_at', [$now->copy()->startOfWeek(), $now->copy()->endOfWeek()])
+            ->get()
+            ->flatMap->items
+            ->sum('total');
+
+        $monthlyRevenue = RepairJob::with('items')
+            ->whereMonth('created_at', $now->month)
+            ->whereYear('created_at', $now->year)
+            ->get()
+            ->flatMap->items
+            ->sum('total');
+
+        $yearlyRevenue = RepairJob::with('items')
+            ->whereYear('created_at', $now->year)
+            ->get()
+            ->flatMap->items
+            ->sum('total');
+
+        // New Vehicles counts
         $dailyVehicles = Vehicle::whereDate('created_at', $now->toDateString())->count();
         $weeklyVehicles = Vehicle::whereBetween('created_at', [$now->copy()->startOfWeek(), $now->copy()->endOfWeek()])->count();
         $monthlyVehicles = Vehicle::whereMonth('created_at', $now->month)->whereYear('created_at', $now->year)->count();
         $yearlyVehicles = Vehicle::whereYear('created_at', $now->year)->count();
-    
+
         return view('dashboard', compact(
             'dailyJobs', 'weeklyJobs', 'monthlyJobs', 'yearlyJobs',
             'dailyRevenue', 'weeklyRevenue', 'monthlyRevenue', 'yearlyRevenue',

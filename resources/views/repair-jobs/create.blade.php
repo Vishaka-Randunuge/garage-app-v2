@@ -92,6 +92,7 @@
         </form>
     </div>
 
+   
     <script>
         function repairJobForm() {
             return {
@@ -101,21 +102,46 @@
                 manualItems: [
                     { manual_type: '', rate: '', amount: '', total: '' },
                 ],
-
+    
                 addInventoryItem() {
                     this.inventoryItems.push({ inventory_id: '', rate: '', amount: '', total: '' });
                 },
                 removeInventoryItem(index) {
                     this.inventoryItems.splice(index, 1);
                 },
-
+    
                 addManualItem() {
                     this.manualItems.push({ manual_type: '', rate: '', amount: '', total: '' });
                 },
                 removeManualItem(index) {
                     this.manualItems.splice(index, 1);
                 },
+    
+                // Add Alpine lifecycle hook
+                init() {
+                    this.$watch('inventoryItems', () => {
+                        this.inventoryItems.forEach(item => {
+                            item.total = this.calculate(item.rate, item.amount);
+                        });
+                    }, { deep: true });
+    
+                    this.$watch('manualItems', () => {
+                        this.manualItems.forEach(item => {
+                            item.total = this.calculate(item.rate, item.amount);
+                        });
+                    }, { deep: true });
+                },
+    
+                calculate(rate, amount) {
+                    rate = parseFloat(rate);
+                    amount = parseFloat(amount);
+                    if (!isNaN(rate) && !isNaN(amount)) {
+                        return (rate * amount).toFixed(2);
+                    }
+                    return '';
+                }
             }
         }
     </script>
+    
 </x-app-layout>

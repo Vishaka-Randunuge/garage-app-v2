@@ -43,21 +43,22 @@
                             <td class="border px-4 py-2">
                                 {{ $item->inventory->part_name ?? $item->manual_type ?? '-' }}
                             </td>
-                            <td class="border px-4 py-2">
+                            <td class="border px-4 py-2 text-right">
                                 {{ $item->rate > 0 ? 'Rs. ' . number_format($item->rate, 2) : '' }}
                             </td>
-                            <td class="border px-4 py-2">
-                                {{ $item->amount > 0 ? $item->amount : '' }}
+                            <td class="border px-4 py-2 text-right">
+                                {{ $item->amount > 0 ? number_format($item->amount, 2) : '' }}
                             </td>
                         </tr>
                     @endforeach
                     <tr class="bg-gray-100 font-bold">
                         <td colspan="3" class="border px-4 py-2 text-right">Total (Rs.)</td>
-                        <td>
+                        <td class="border px-4 py-2 text-right">
                             Rs. {{ number_format($grandTotal, 2) }}
                         </td>
                     </tr>
                 </tbody>
+                
             </table>
 
             <div class="hidden-print mt-8" style="max-width: 160px;">

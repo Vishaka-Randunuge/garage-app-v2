@@ -114,4 +114,43 @@
             button.parentElement.remove();
         }
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initial binding
+            bindTotalCalculation();
+    
+            // When adding new items, bind their inputs too
+            const originalAddInventoryItem = addInventoryItem;
+            const originalAddManualItem = addManualItem;
+    
+            addInventoryItem = function () {
+                originalAddInventoryItem();
+                bindTotalCalculation();
+            };
+    
+            addManualItem = function () {
+                originalAddManualItem();
+                bindTotalCalculation();
+            };
+    
+            function bindTotalCalculation() {
+                document.querySelectorAll('.inventory-item, .manual-item').forEach(container => {
+                    const rate = container.querySelector('input[name*="[rate]"]');
+                    const amount = container.querySelector('input[name*="[amount]"]');
+                    const total = container.querySelector('input[name*="[total]"]');
+    
+                    if (rate && amount && total) {
+                        [rate, amount].forEach(input => {
+                            input.addEventListener('input', () => {
+                                const rateVal = parseFloat(rate.value) || 0;
+                                const amountVal = parseFloat(amount.value) || 0;
+                                total.value = (rateVal * amountVal).toFixed(2);
+                            });
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+    
 </x-app-layout>
