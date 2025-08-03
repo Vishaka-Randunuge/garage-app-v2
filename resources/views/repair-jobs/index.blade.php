@@ -62,19 +62,19 @@
                         <td class="py-2 px-4 border space-y-2">
                             <a href="{{ route('repair-jobs.print', $job->id) }}" 
                                target="_blank" 
-                               class="text-green-600 hover:underline block">
+                               class="text-green-600 hover:transition-transform hover:scale-105 block">
                                 Print
                             </a>
 
                             <a href="{{ route('repair-jobs.edit', $job->id) }}" 
-                               class="text-blue-600 hover:underline block">
+                               class="text-blue-600 hover:transition-transform hover:scale-105 block">
                                 Edit
                             </a>
 
                             <form action="{{ route('repair-jobs.destroy', $job->id) }}" method="POST" onsubmit="return confirm('Delete this repair job?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:underline">Delete</button>
+                                <button type="submit" class="text-red-600 hover:transition-transform hover:scale-105">Delete</button>
                             </form>
                         </td>
                     </tr>

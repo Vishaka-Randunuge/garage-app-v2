@@ -53,11 +53,17 @@
             </table>
 
             <div class="mt-6 flex justify-between">
-                <button onclick="window.print()" class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 print:hidden">
-                    🖨️ Print
+                <!-- Print Button -->
+                <button onclick="window.print()" class="bg-red-600 text-white px-4 py-2 rounded shadow hover:bg-red-800 print:hidden transition-transform hover:scale-105">
+                    Print
                 </button>
-                <a href="{{ route('repair-jobs.show', $repairJob->id) }}" class="text-sm text-blue-500 underline print:hidden">Back to View</a>
+            
+                <!-- Back to View Link -->
+                <a href="{{ route('repair-jobs.show', $repairJob->id) }}" class="text-sm text-red-500 flex items-center gap-1 print:hidden hover:text-black">
+                    ← Back
+                </a>
             </div>
+            
         </div>
     </div>
 
