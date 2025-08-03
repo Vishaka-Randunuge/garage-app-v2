@@ -7,6 +7,17 @@
 
     <div class="py-8 px-4">
         <div class="max-w-4xl mx-auto bg-white p-6 border border-gray-300 rounded">
+
+            <!-- Content hidden on screen, visible only on print -->
+        <div class="hidden-print text-center mb-6">
+            <h1 class="text-3xl font-extrabold uppercase">P.M.<span class="text-red-600">MOTORS</span></h1>
+            <p class="mt-1 font-semibold">All kinds of Vehicle <span class="text-red-600">Spare Parts & Repairs</span></p>
+            <p>And Lubricant</p>
+            <p>100/1, Malapalla, Pannipitya</p>
+            <p>Tel: 0715567420 | 0703334334</p>
+        </div>
+
+
             <h2 class="text-xl font-bold mb-4">Repair Job Details</h2>
 
             <p><strong>Vehicle:</strong> {{ $repairJob->vehicle->registration_no ?? '-' }}</p>
@@ -30,7 +41,7 @@
                         <tr>
                             <td class="border px-4 py-2">{{ $index + 1 }}</td>
                             <td class="border px-4 py-2">
-                                {{ $item->inventory->name ?? $item->manual_type ?? '-' }}
+                                {{ $item->inventory->part_name ?? $item->manual_type ?? '-' }}
                             </td>
                             <td class="border px-4 py-2">
                                 {{ $item->rate > 0 ? 'Rs. ' . number_format($item->rate, 2) : '' }}
@@ -43,15 +54,18 @@
                     <tr class="bg-gray-100 font-bold">
                         <td colspan="3" class="border px-4 py-2 text-right">Total (Rs.)</td>
                         <td>
-                            @if($item->rate && $item->rate != 0)
-                                Rs. {{ number_format($item->rate, 2) }}
-                            @endif
+                            Rs. {{ number_format($grandTotal, 2) }}
                         </td>
-                        
                     </tr>
                 </tbody>
             </table>
 
+            <div class="hidden-print mt-8" style="max-width: 160px;">
+                <hr style="border: none; border-bottom: 1px dotted black; margin: 0 0 0.25rem 0;" />
+                <p class="italic" style="margin: 0;">(authorized signature)</p>
+              </div>
+              
+            
             <div class="mt-6 flex justify-between">
                 <!-- Print Button -->
                 <button onclick="window.print()" class="bg-red-600 text-white px-4 py-2 rounded shadow hover:bg-red-800 print:hidden transition-transform hover:scale-105">
@@ -72,30 +86,41 @@
             .print\:hidden { display: none !important; }
             body { background: white !important; }
         }
+
+        @media screen {
+        .hidden-print {
+            display: none !important;
+        }
+        }
+        @media print {
+        .hidden-print {
+            display: block !important;
+        }
+        }
+
     </style>
 
-<script>
-    document.getElementById('printBtn').addEventListener('click', function() {
-        window.print(); // open print dialog
-    
-        // After print dialog opens, send AJAX to mark as printed
-        fetch("{{ route('repair-jobs.markPrinted', $repairJob->id) }}", {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({}),
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.message);
-            // Optionally, you could show a small confirmation or update the UI
-        })
-        .catch(error => {
-            console.error('Error updating status:', error);
+    <script>
+        document.getElementById('printBtn').addEventListener('click', function() {
+            window.print(); // open print dialog
+        
+            // After print dialog opens, send AJAX to mark as printed
+            fetch("{{ route('repair-jobs.markPrinted', $repairJob->id) }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({}),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+            })
+            .catch(error => {
+                console.error('Error updating status:', error);
+            });
         });
-    });
     </script>
 </x-app-layout>
