@@ -6,7 +6,11 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                        <div class="hidden sm:flex items-center justify-center flex-1">
+                            <span class="text-2xl font-extrabold text-red-600 tracking-wide">
+                                <span class="text-black">P.M.</span>Motors
+                            </span>
+                        </div>
                     </a>
                 </div>
 
@@ -15,16 +19,31 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('repair-jobs.index')" :active="request()->routeIs('repair-jobs.*')">
+                        {{ __('Repair Jobs') }}
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('vehicles.index')" :active="request()->routeIs('vehicles.*')">
+                        {{ __('Vehicles') }}
+                    </x-nav-link>
+                
+                    <x-nav-link :href="route('inventories.index')" :active="request()->routeIs('inventories.*')">
+                        {{ __('Inventory') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('repair-jobs.printed')" :active="request()->routeIs('repair-jobs.printed')">
+                        {{ __('Printed Invoices') }}
+                    </x-nav-link>
                 </div>
             </div>
 
-            <!-- Center: Site title -->
+            <!-- Center: Site title 
             <div class="hidden sm:flex items-center justify-center flex-1">
                 <span class="text-2xl font-extrabold text-red-600 tracking-wide">
                     <span class="text-black">P.M.</span>Motors
                 </span>
             </div>
-
+-->
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">

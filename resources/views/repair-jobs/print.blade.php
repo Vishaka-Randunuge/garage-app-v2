@@ -54,9 +54,14 @@
                     <tr class="bg-gray-100 font-bold">
                         <td colspan="3" class="border px-4 py-2 text-right">Total (Rs.)</td>
                         <td class="border px-4 py-2 text-right">
-                            Rs. {{ number_format($grandTotal, 2) }}
+                            @if($grandTotal != 0)
+                                Rs. {{ number_format($grandTotal, 2) }}
+                            @else
+                                {{-- Show nothing if total is 0 --}}
+                            @endif
                         </td>
                     </tr>
+                    
                 </tbody>
                 
             </table>
