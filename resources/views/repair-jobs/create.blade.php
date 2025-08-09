@@ -1,7 +1,11 @@
 {{-- resources/views/repair-jobs/create.blade.php --}}
 <x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Add New Repair Job</h2>
+    </x-slot>
+
     <div class="container mx-auto max-w-3xl p-4">
-        <h1 class="text-2xl font-bold mb-6">Add New Repair Job</h1>
+        
 
         <form action="{{ route('repair-jobs.store') }}" method="POST" class="bg-white p-6 rounded shadow" x-data="repairJobForm()">
             @csrf

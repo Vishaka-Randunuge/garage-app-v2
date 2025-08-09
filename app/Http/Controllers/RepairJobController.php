@@ -9,11 +9,22 @@ use App\Models\Inventory;
 
 class RepairJobController extends Controller
 {
-    public function index()
-    {
-        $repairJobs = RepairJob::with(['vehicle', 'items.inventory'])->latest()->paginate(15);
-        return view('repair-jobs.index', compact('repairJobs'));
+    public function index(Request $request)
+{
+    $query = RepairJob::with(['vehicle', 'items.inventory']);
+
+    if ($search = $request->input('search')) {
+        $query->whereHas('vehicle', function ($q) use ($search) {
+            $q->where('registration_no', 'like', "%{$search}%")
+              ->orWhere('owner_name', 'like', "%{$search}%");
+        });
     }
+
+    $repairJobs = $query->latest()->paginate(15);
+
+    return view('repair-jobs.index', compact('repairJobs'));
+}
+
 
     public function create()
     {

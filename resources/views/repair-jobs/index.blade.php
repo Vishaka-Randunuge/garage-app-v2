@@ -11,6 +11,22 @@
 
         <a href="{{ route('repair-jobs.create') }}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mb-4 inline-block">Add New Repair Job</a>
 
+        <div class="mb-4 flex justify-between items-center">
+            <form method="GET" action="{{ route('repair-jobs.index') }}" class="flex gap-2">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by Reg No or Owner"
+                       class="border border-gray-300 rounded px-3 py-2 w-64 focus:outline-none focus:ring focus:border-red-400">
+                <button type="submit"
+                        class="bg-gray-900 text-white px-4 py-2 rounded hover:bg-red-700">
+                    Search
+                </button>
+                @if(request('search'))
+                    <a href="{{ route('repair-jobs.index') }}"
+                       class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400">
+                        Reset
+                    </a>
+                @endif
+            </form>
+        </div>
         @if(session('success'))
             <div class="mb-4 text-green-600 font-semibold">
                 {{ session('success') }}
