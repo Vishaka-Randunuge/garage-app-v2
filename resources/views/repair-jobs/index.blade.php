@@ -9,14 +9,14 @@
     <div class="container max-w-7xl mx-auto sm:px-6 lg:px-8">
         
 
-        <a href="{{ route('repair-jobs.create') }}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mb-4 inline-block">Add New Repair Job</a>
+        <a href="{{ route('repair-jobs.create') }}" class="bg-primary-purple text-white px-4 py-2 rounded hover:bg-hover-purple mb-4 inline-block hover:font-bold hover:scale-110 transition-transform duration-200">Add New Repair Job</a>
 
         <div class="mb-4 flex justify-between items-center">
             <form method="GET" action="{{ route('repair-jobs.index') }}" class="flex gap-2">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by Reg No or Owner"
                        class="border border-gray-300 rounded px-3 py-2 w-64 focus:outline-none focus:ring focus:border-red-400">
                 <button type="submit"
-                        class="bg-gray-900 text-white px-4 py-2 rounded hover:bg-red-700">
+                        class="bg-primary-brown text-white px-4 py-2 rounded hover:bg-hover-brown">
                     Search
                 </button>
                 @if(request('search'))

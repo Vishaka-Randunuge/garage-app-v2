@@ -10,17 +10,17 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-7xl w-full items-center">
         <!-- Left Column -->
         <div class="space-y-6 px-4 lg:px-0">
-            <h1 class="text-4xl font-bold text-[#1b1b18]">Welcome to <span class="text-red-600">P.M.Motors</span></h1>
+            <h1 class="text-4xl font-bold">Welcome to <span class="text-primary-teal">P.M.<span class="text-primary-brown">Motors</span></span></h1>
             <p class="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vehicula, lacus nec fringilla cursus, sapien orci mattis velit.</p>
             
             <div class="flex space-x-4">
                 <a href="{{ route('login') }}"
-                   class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded shadow transition">
+                   class="bg-primary-brown hover:bg-hover-brown text-white px-6 py-2 rounded shadow transition">
                     Log in
                 </a>
                 @if (Route::has('register'))
                 <a href="{{ route('register') }}"
-                   class="border border-gray-400 hover:border-red-600 text-[#1b1b18] px-6 py-2 rounded transition">
+                   class="border border-primary-brown hover:text-primary-brown text-[#1b1b18] px-6 py-2 rounded transition">
                     Register
                 </a>
                 @endif

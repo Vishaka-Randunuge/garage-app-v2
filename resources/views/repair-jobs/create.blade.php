@@ -126,6 +126,7 @@
 
             <div class="flex justify-end">
                 <button type="submit" class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700">Save Repair Job</button>
+                <a href="{{ route('repair-jobs.index') }}" class="ml-2 px-4 py-3 rounded text-gray-600 hover:bg-gray-300">Cancel</a>
             </div>
         </form>
     </div>

@@ -8,9 +8,6 @@
     <div class="py-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white p-6 shadow-md sm:rounded-lg">
-
-                <a href="{{ route('repair-jobs.index') }}" class="text-blue-500 hover:underline mb-4 inline-block">← Back to List</a>
-
                 <h3 class="text-lg font-bold mb-4">Repair Job ID: {{ $repairJob->id }}</h3>
 
                 <div class="mb-6">
@@ -59,11 +56,14 @@
                 </table>
 
 
-                <!-- Print Button -->
-                <a href="{{ route('repair-jobs.print', $repairJob->id) }}" 
-                    class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
-                     🖨️ Print
-                 </a>
+                <div class="mt-6 flex justify-between">
+                    
+                
+                    <!-- Back to View Link -->
+                    <a href="{{ route('repair-jobs.printed', $repairJob->id) }}" class="text-sm text-red-500 flex items-center gap-1 print:hidden hover:text-black">
+                        ← Back
+                    </a>
+                </div>
                  
             </div>
         </div>

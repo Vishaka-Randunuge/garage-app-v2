@@ -16,7 +16,7 @@
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <a href="{{ route('inventories.create') }}"
-               class="mb-4 inline-block px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+               class="bg-primary-teal text-white px-4 py-2 rounded hover:bg-hover-teal mb-4 inline-block hover:font-bold hover:scale-110 transition-transform duration-200">
                Add Inventory
             </a>
 
@@ -25,7 +25,7 @@
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by Part Name"
                            class="border border-gray-300 rounded px-3 py-2 w-64 focus:outline-none focus:ring focus:border-red-400">
                     <button type="submit"
-                            class="bg-gray-900 text-white px-4 py-2 rounded hover:bg-red-700">
+                            class="bg-primary-brown text-white px-4 py-2 rounded hover:bg-hover-brown">
                         Search
                     </button>
                     @if(request('search'))
@@ -58,12 +58,12 @@
                                 <td class="px-6 py-4 text-gray-800 border-r border-gray-300">{{ ucfirst($inventory->status) }}</td>
                                 <td class="px-6 py-4 text-gray-800 border-r border-gray-300">{{ $inventory->created_at->format('Y-m-d') }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <a href="{{ route('inventories.show', $inventory->id) }}" class="px-2 py-2 rounded text-green-600 hover:bg-green-300">View</a>
-                                    <a href="{{ route('inventories.edit', $inventory->id) }}" class="px-2 py-2 rounded text-yellow-600 hover:bg-yellow-300">Edit</a>
+                                    <a href="{{ route('inventories.show', $inventory->id) }}" class="px-2 py-2 rounded text-green-600 hover:transition-transform hover:scale-105">View</a>
+                                    <a href="{{ route('inventories.edit', $inventory->id) }}" class="px-2 py-2 rounded text-blue-600 hover:transition-transform hover:scale-105">Edit</a>
                                     <form action="{{ route('inventories.destroy', $inventory->id) }}" method="POST" class="inline-block">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="px-2 py-2 rounded text-red-600 hover:bg-red-300"
+                                        <button type="submit" class="px-2 py-2 rounded text-red-600 hover:transition-transform hover:scale-105"
                                             onclick="return confirm('Delete this inventory item?')">Delete</button>
                                     </form>
                                 </td>

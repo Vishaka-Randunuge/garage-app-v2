@@ -20,7 +20,7 @@
                 
                         <div class="flex flex-col gap-2">
                             <a href="http://127.0.0.1:8000/repair-jobs/create" 
-                               class="bg-primary-teal hover:bg-hover-teal text-white text-center py-5 px-4 rounded transition-transform duration-200 hover:scale-105">
+                               class="bg-primary-purple hover:bg-hover-purple text-white text-center py-5 px-4 rounded transition-transform duration-200 hover:scale-105">
                                Add Repair Job
                             </a>
                             <a href="http://127.0.0.1:8000/vehicles/create" 
@@ -28,7 +28,7 @@
                                Add Vehicle
                             </a>
                             <a href="http://127.0.0.1:8000/inventories/create" 
-                               class="bg-primary-purple hover:bg-hover-purple text-white text-center py-5 px-4 rounded transition-transform duration-200 hover:scale-105">
+                               class="bg-primary-teal hover:bg-hover-teal text-white text-center py-5 px-4 rounded transition-transform duration-200 hover:scale-105">
                                Add Inventory
                             </a>
                             
@@ -115,22 +115,44 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 
                 <!-- Ongoing Repair Jobs -->
-                {{-- <div class="bg-white p-6 rounded-lg shadow">
+                <div class="bg-white p-6 rounded-lg shadow">
                     <h3 class="text-lg font-bold mb-4">Ongoing Repair Jobs</h3>
-                    <ul class="divide-y divide-gray-200">
-                        @foreach ($ongoingJobs as $job)
-                            <li class="py-3">
-                                <div class="flex justify-between items-center">
-                                    <span class="font-semibold">{{ $job->vehicle->plate_number ?? 'Unknown Vehicle' }}</span>
-                                    <span class="text-sm text-gray-500">{{ $job->status }}</span>
-                                </div>
-                                <p class="text-sm text-gray-600">
-                                    Started: {{ $job->created_at->format('M d, Y') }}
-                                </p>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div> --}}
+                
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full border border-gray-200">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="px-4 py-2 border">Vehicle No</th>
+                                    <th class="px-4 py-2 border">Owner</th>
+                                    <th class="px-4 py-2 border">Created At</th>
+                                    <th class="px-4 py-2 border">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($ongoingJobs as $job)
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-4 py-2 border">{{ $job->vehicle->registration_no ?? 'N/A' }}</td>
+                                        <td class="px-4 py-2 border">{{ $job->vehicle->owner_name ?? 'N/A' }}</td>
+                                        <td class="px-4 py-2 border">{{ $job->created_at->format('Y-m-d') }}</td>
+                                        <td class="px-4 py-2 border text-center">
+                                            <a href="{{ url('/repair-jobs/' . $job->id . '/edit') }}"
+                                               class="text-red-500 hover:font-bold transform transition duration-200">
+                                               Edit
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="px-4 py-2 border text-center text-gray-500">
+                                            No ongoing jobs found.
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
     
                 <!-- Low Inventory -->
                 <div class="bg-white p-6 rounded-lg shadow">

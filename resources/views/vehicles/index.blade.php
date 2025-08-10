@@ -17,7 +17,7 @@
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <a href="{{ route('vehicles.create') }}"
-               class="mb-4 inline-block px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+               class="bg-primary-blue text-white px-4 py-2 rounded hover:bg-hover-blue mb-4 inline-block hover:font-bold hover:scale-110 transition-transform duration-200">
                Add Vehicle
             </a>
 
@@ -26,7 +26,7 @@
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by Reg No or Owner"
                            class="border border-gray-300 rounded px-3 py-2 w-64 focus:outline-none focus:ring focus:border-red-400">
                     <button type="submit"
-                            class="bg-gray-900 text-white px-4 py-2 rounded hover:bg-red-700">
+                            class="bg-primary-brown text-white px-4 py-2 rounded hover:bg-hover-brown">
                         Search
                     </button>
                     @if(request('search'))
@@ -68,12 +68,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-gray-800 border-r border-gray-300">{{ $vehicle->owner_contact }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-gray-800 border-r border-gray-300">{{ $vehicle->brand }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <a href="{{ route('vehicles.show', $vehicle->id) }}" class="px-2 py-2 rounded text-green-600 hover:bg-green-300">View</a>
-                                    <a href="{{ route('vehicles.edit', $vehicle->id) }}" class="px-2 py-2 rounded text-yellow-600 hover:bg-yellow-300">Edit</a>
+                                    <a href="{{ route('vehicles.show', $vehicle->id) }}" class="px-2 py-2 rounded text-green-600 hover:transition-transform hover:scale-105">View</a>
+                                    <a href="{{ route('vehicles.edit', $vehicle->id) }}" class="px-2 py-2 rounded text-blue-600 hover:transition-transform hover:scale-105">Edit</a>
                                     <form action="{{ route('vehicles.destroy', $vehicle->id) }}" method="POST" class="inline-block">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="px-2 py-2 rounded text-red-600 hover:bg-red-300"
+                                        <button type="submit" class="px-2 py-2 rounded text-red-600 hover:transition-transform hover:scale-105"
                                             onclick="return confirm('Are you sure you want to delete this vehicle?')">
                                             Delete
                                         </button>

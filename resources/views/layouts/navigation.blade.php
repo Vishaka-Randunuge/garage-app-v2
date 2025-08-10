@@ -4,15 +4,18 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
+                
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
                         <div class="hidden sm:flex items-center justify-center flex-1">
-                            <span class="text-2xl font-extrabold text-red-600 tracking-wide">
-                                <span class="text-black">P.M.</span>Motors
+                            <img src="{{ asset('favicon.ico') }}" alt="P.M. Motors" class="h-8 w-8">
+                            <span class="text-xl font-extrabold text-primary-brown tracking-wide">
+                                <span class="text-hover-teal ml-1">P.M.</span>Motors
                             </span>
                         </div>
                     </a>
                 </div>
+                
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
