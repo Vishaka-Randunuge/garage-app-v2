@@ -11,7 +11,7 @@
         <!-- Left Column -->
         <div class="space-y-6 px-4 lg:px-0">
             <h1 class="text-4xl font-bold">Welcome to <span class="text-primary-teal">P.M.<span class="text-primary-brown">Motors</span></span></h1>
-            <p class="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vehicula, lacus nec fringilla cursus, sapien orci mattis velit.</p>
+            <p class="text-gray-600">From everyday maintenance to specialized components, find everything you need right here!</p>
             
             <div class="flex space-x-4">
                 <a href="{{ route('login') }}"
