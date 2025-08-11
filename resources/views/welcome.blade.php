@@ -18,12 +18,12 @@
                    class="bg-primary-brown hover:bg-hover-brown text-white px-6 py-2 rounded shadow transition">
                     Log in
                 </a>
-                @if (Route::has('register'))
+                {{-- @if (Route::has('register'))
                 <a href="{{ route('register') }}"
                    class="border border-primary-brown hover:text-primary-brown text-[#1b1b18] px-6 py-2 rounded transition">
                     Register
                 </a>
-                @endif
+                @endif --}}
             </div>
         </div>
 
