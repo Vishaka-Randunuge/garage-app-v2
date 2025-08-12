@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::resource('users', UserController::class);
     // Add your future user management here
     // Route::resource('users', UserController::class);
 });

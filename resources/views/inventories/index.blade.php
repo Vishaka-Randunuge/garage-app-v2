@@ -58,8 +58,8 @@
                                 <td class="px-6 py-4 text-gray-800 border-r border-gray-300">{{ ucfirst($inventory->status) }}</td>
                                 <td class="px-6 py-4 text-gray-800 border-r border-gray-300">{{ $inventory->created_at->format('Y-m-d') }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <a href="{{ route('inventories.show', $inventory->id) }}" class="px-2 py-2 rounded text-green-600 hover:transition-transform hover:scale-105">View</a>
-                                    <a href="{{ route('inventories.edit', $inventory->id) }}" class="px-2 py-2 rounded text-blue-600 hover:transition-transform hover:scale-105">Edit</a>
+                                    <a href="{{ route('inventories.show', $inventory->id) }}" class="px-2 rounded text-green-600 hover:scale-110 transition-transform duration-200 inline-block">View</a>
+                                    <a href="{{ route('inventories.edit', $inventory->id) }}" class="px-2 rounded text-blue-600 hover:scale-110 transition-transform duration-200 inline-block">Edit</a>
                                     <form action="{{ route('inventories.destroy', $inventory->id) }}" method="POST" class="inline-block">
                                         @csrf
                                         @method('DELETE')

@@ -37,6 +37,15 @@
                     <x-nav-link :href="route('repair-jobs.printed')" :active="request()->routeIs('repair-jobs.printed')">
                         {{ __('Printed Invoices') }}
                     </x-nav-link>
+                    <!-- Only show for admin -->
+                    @auth
+                    @if(auth()->user()->role === 'admin')
+                        <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
+                            {{ __('Manage Users') }}
+                        </x-nav-link>
+                    @endif
+                    @endauth
+
                 </div>
             </div>
 

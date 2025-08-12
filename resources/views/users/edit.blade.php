@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Add New User') }}
+            {{ __('Edit User') }}
         </h2>
     </x-slot>
 
@@ -15,12 +15,13 @@
                     </div>
                 @endif
 
-                <form action="{{ route('users.store') }}" method="POST">
+                <form action="{{ route('users.update', $user->id) }}" method="POST">
                     @csrf
+                    @method('PUT')
 
                     <div class="mb-4">
                         <label class="block font-medium mb-1">Name</label>
-                        <input type="text" name="name" value="{{ old('name') }}"
+                        <input type="text" name="name" value="{{ old('name', $user->name) }}"
                                class="w-full border border-gray-300 rounded px-3 py-2" required>
                         @error('name')
                             <div class="text-red-600 text-sm">{{ $message }}</div>
@@ -29,7 +30,7 @@
 
                     <div class="mb-4">
                         <label class="block font-medium mb-1">Email</label>
-                        <input type="email" name="email" value="{{ old('email') }}"
+                        <input type="email" name="email" value="{{ old('email', $user->email) }}"
                                class="w-full border border-gray-300 rounded px-3 py-2" required>
                         @error('email')
                             <div class="text-red-600 text-sm">{{ $message }}</div>
@@ -37,26 +38,16 @@
                     </div>
 
                     <div class="mb-4">
-                        <label class="block font-medium mb-1">Password</label>
-                        <input type="password" name="password"
-                               class="w-full border border-gray-300 rounded px-3 py-2" required>
-                        @error('password')
-                            <div class="text-red-600 text-sm">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    {{-- Role dropdown --}}
-                    <div class="mb-4">
                         <label class="block font-medium mb-1">Role</label>
                         <select name="role" class="w-full border border-gray-300 rounded px-3 py-2">
-                            <option value="user" selected>User</option>
-                            <option value="admin">Admin</option>
+                            <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>User</option>
+                            <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
                         </select>
                     </div>
 
                     <button type="submit"
                             class="bg-primary-blue text-white px-4 py-2 rounded hover:bg-hover-blue">
-                        Create User
+                        Update User
                     </button>
                 </form>
 

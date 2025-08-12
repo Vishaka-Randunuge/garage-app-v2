@@ -52,9 +52,9 @@
                                 <td class="border px-4 py-2">{{ $job->vehicle->registration_no ?? '-' }}</td>
                                 <td class="border px-4 py-2">{{ $job->vehicle->owner_name ?? '-' }}</td>
                                 <td class="border px-4 py-2">{{ $job->created_at->format('Y-m-d') }}</td>
-                                <td class="border px-4 py-2 text-green-600 font-semibold">{{ ucfirst($job->status) }}</td>
-                                <td class="border px-4 py-2">
-                                    <a href="{{ route('repair-jobs.show', $job->id) }}" class="text-blue-500 hover:underline">View</a>
+                                <td class="border px-4 py-2 text-hover-brown text-center font-semibold">{{ ucfirst($job->status) }}</td>
+                                <td class="border px-4 py-2 text-center">
+                                    <a href="{{ route('repair-jobs.show', $job->id) }}" class="text-primary-blue hover:scale-110 transition-transform duration-200 inline-block">View</a>
                                 </td>
                             </tr>
                         @endforeach

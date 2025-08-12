@@ -68,8 +68,8 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-gray-800 border-r border-gray-300">{{ $vehicle->owner_contact }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-gray-800 border-r border-gray-300">{{ $vehicle->brand }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <a href="{{ route('vehicles.show', $vehicle->id) }}" class="px-2 py-2 rounded text-green-600 hover:transition-transform hover:scale-105">View</a>
-                                    <a href="{{ route('vehicles.edit', $vehicle->id) }}" class="px-2 py-2 rounded text-blue-600 hover:transition-transform hover:scale-105">Edit</a>
+                                    <a href="{{ route('vehicles.show', $vehicle->id) }}" class="px-2 py-2 rounded text-green-600 hover:scale-110 transition-transform duration-200 inline-block">View</a>
+                                    <a href="{{ route('vehicles.edit', $vehicle->id) }}" class="px-2 py-2 rounded text-blue-600 hover:scale-110 transition-transform duration-200 inline-block">Edit</a>
                                     <form action="{{ route('vehicles.destroy', $vehicle->id) }}" method="POST" class="inline-block">
                                         @csrf
                                         @method('DELETE')
